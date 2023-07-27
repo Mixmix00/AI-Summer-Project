@@ -14,11 +14,11 @@ public class God : MonoBehaviour
 
         Sphere = GameObject.Find("Sphere");
         dude = GameObject.Find("dude");
-        gunDataRed.totalAmmo = 31;
-        gunDataRed.currentAmmo = 31;
+        gunDataRed.totalAmmo = 0;
+        gunDataRed.currentAmmo = 3;
 
-        gunDataBlue.totalAmmo = 31;
-        gunDataBlue.currentAmmo = 31;
+        gunDataBlue.totalAmmo = 0;
+        gunDataBlue.currentAmmo = 3;
 
         
     }

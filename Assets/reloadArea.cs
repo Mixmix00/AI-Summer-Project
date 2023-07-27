@@ -53,9 +53,11 @@ public class reloadArea : MonoBehaviour
 
         if(Vector3.Distance(Blue.transform.position, transform.position) < 50f && (DateTime.Now - lastReloadBlue).TotalSeconds > 0.5f)
         {
-            gunDataBlue.totalAmmo++;
-            ammoRemaining--;
-            lastReloadBlue = DateTime.Now;
+            if(ammoRemaining > 0){
+                gunDataBlue.totalAmmo++;
+                ammoRemaining--;
+                lastReloadBlue = DateTime.Now;
+            }
         }
     }
 
