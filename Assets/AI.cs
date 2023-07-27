@@ -90,6 +90,10 @@ public class AI : MonoBehaviour
 
         PlayerShoot.shootInput?.Invoke();
         Debug.DrawRay(transform.position, transform.forward, Color.red, gunData.maxDistance);
+
+        if(gunData.currentAmmo == 0){
+            Reloading();
+        }
     }
 
     // Start is called before the first frame update
@@ -112,6 +116,7 @@ public class AI : MonoBehaviour
         if(twoAreAlive()){
             Debug.DrawRay(transform.position, Sphere.transform.position - dude.transform.position, Color.blue, 1000f);
             if(Physics.Raycast(transform.position, Sphere.transform.position - dude.transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreEyesRaycast")))){
+                Debug.Log("Q: " + hitInfo.transform.name);
                 if(hitInfo.transform.name == "Sphere"){
                     if(hitInfo.distance <= attackRange){
                         playerInAttackRange = true;

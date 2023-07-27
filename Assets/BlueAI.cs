@@ -89,7 +89,12 @@ public class BlueAI : MonoBehaviour
         transform.LookAt(dude.transform);
 
         PlayerShoot.shootInput?.Invoke();
+
+        Debug.Log("Blue is attacking");
         Debug.DrawRay(transform.position, transform.forward, Color.red, gunData.maxDistance);
+        if(gunData.currentAmmo == 0){
+            Reloading();
+        }
     }
 
     // Start is called before the first frame update
@@ -111,7 +116,7 @@ public class BlueAI : MonoBehaviour
         bool goingToReloadPlace = false;
         if(twoAreAlive()){
             Debug.DrawRay(transform.position, dude.transform.position - transform.position, Color.blue, 1000f);
-            if(Physics.Raycast(transform.position, dude.transform.position - transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreEyesRaycast")))){
+            if(Physics.Raycast(transform.position, dude.transform.position - transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreSelf")))){
                 if(hitInfo.transform.name == "dude"){
                     if(hitInfo.distance <= attackRange){
                         playerInAttackRange = true;

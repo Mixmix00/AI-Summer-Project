@@ -12,10 +12,10 @@ public class Gun : MonoBehaviour
 		timeSinceLastShot = 10000f;
 	}
 	private bool CanShoot(){
-		//return true;
+		return true;
 		//Debug.Log("relod: " + gunData.reloading + " tslf: " + (timeSinceLastShot > 1f / (gunData.fireRate /60f)));
 		
-		return !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate /60f); //TODO: take away gunData.timeSinceLastShot
+		//return !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate /60f); 
 	} 
 	public void StartReload(){
 		if(!gunData.reloading){
