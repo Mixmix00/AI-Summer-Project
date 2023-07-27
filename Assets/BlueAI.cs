@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AI : MonoBehaviour
+public class BlueAI : MonoBehaviour
 {
 
     
@@ -80,13 +80,13 @@ public class AI : MonoBehaviour
     }
 
     private void Chasing(){
-        transform.position = Vector3.MoveTowards(transform.position, Sphere.transform.position, 2f);
+        transform.position = Vector3.MoveTowards(transform.position, dude.transform.position, 2f);
     }
 
     private void Attacking(){
         transform.position = Vector3.MoveTowards(transform.position, transform.position, 1f);
 
-        transform.LookAt(Sphere.transform);
+        transform.LookAt(dude.transform);
 
         PlayerShoot.shootInput?.Invoke();
         Debug.DrawRay(transform.position, transform.forward, Color.red, gunData.maxDistance);
@@ -110,9 +110,9 @@ public class AI : MonoBehaviour
     {
         bool goingToReloadPlace = false;
         if(twoAreAlive()){
-            Debug.DrawRay(transform.position, Sphere.transform.position - dude.transform.position, Color.blue, 1000f);
-            if(Physics.Raycast(transform.position, Sphere.transform.position - dude.transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreEyesRaycast")))){
-                if(hitInfo.transform.name == "Sphere"){
+            Debug.DrawRay(transform.position, dude.transform.position - transform.position, Color.blue, 1000f);
+            if(Physics.Raycast(transform.position, dude.transform.position - transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreEyesRaycast")))){
+                if(hitInfo.transform.name == "dude"){
                     if(hitInfo.distance <= attackRange){
                         playerInAttackRange = true;
                         playerInSightRange = true;
@@ -133,8 +133,10 @@ public class AI : MonoBehaviour
             }
             
 
-            if(gunData.currentAmmo < 2){
-                if(gunData.totalAmmo > 0){
+            if(gunData.currentAmmo < 8){
+                if(gunData.totalAmmo > 31){
+                    Reloading();
+                }else if(gunData.totalAmmo > 0){
                     Reloading();
                 }else if(gunData.totalAmmo == 0){
                     GettingAmmo();

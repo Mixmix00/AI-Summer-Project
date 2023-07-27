@@ -19,8 +19,8 @@ MonoBehaviour:
   farDamage: 20
   headshotMultiplier: 5
   maxDistance: 200
-  totalAmmo: 50
-  currentAmmo: 31
+  totalAmmo: 8
+  currentAmmo: 10
   magSize: 31
   fireRate: 600
   reloadTime: 1.5

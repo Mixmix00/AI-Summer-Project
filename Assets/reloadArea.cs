@@ -7,7 +7,7 @@ public class reloadArea : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] GunData gunDataRed;
-    //[SerializeField] //GunData gunDataBlue;
+    [SerializeField] GunData gunDataBlue;
     [SerializeField] float timedAmmoSpeed;
 
     private DateTime lastReloadRed;
@@ -16,12 +16,13 @@ public class reloadArea : MonoBehaviour
 
     private int ammoRemaining;
 
-    private GameObject Red;
+    GameObject Red;
+    GameObject Blue;
     //private GameObject Blue;
     void Start()
     {
         Red = GameObject.Find("dude");
-        //Blue = GameObject.Find("Blue");
+        Blue = GameObject.Find("Sphere");
         lastReloadRed = DateTime.Now;
         lastReloadBlue = DateTime.Now;
         timedAmmo = DateTime.Now;
@@ -39,7 +40,7 @@ public class reloadArea : MonoBehaviour
             ammoRemaining++;
         }
         //Debug.Log("reloadArea: " + Vector3.Distance(Red.transform.position, transform.position));
-        if (Vector3.Distance(Red.transform.position, transform.position) < 25f && (DateTime.Now - lastReloadRed).TotalSeconds > 0.5f)
+        if (Vector3.Distance(Red.transform.position, transform.position) < 50f && (DateTime.Now - lastReloadRed).TotalSeconds > 0.5f)
         {
             if(ammoRemaining > 0)
             {
@@ -50,11 +51,12 @@ public class reloadArea : MonoBehaviour
             
         }
 
-        // if(Vector3.Distance(Blue.transform.position, transform.position) < 5f && (DateTime.Now - lastReloadBlue).TotalSeconds > 0.5f)
-        // {
-        //     //gunDataBlue.totalAmmo++;
-        //     lastReloadBlue = DateTime.Now;
-        // }
+        if(Vector3.Distance(Blue.transform.position, transform.position) < 50f && (DateTime.Now - lastReloadBlue).TotalSeconds > 0.5f)
+        {
+            gunDataBlue.totalAmmo++;
+            ammoRemaining--;
+            lastReloadBlue = DateTime.Now;
+        }
     }
 
     // Update is called once per frame

@@ -42,7 +42,6 @@ public class Gun : MonoBehaviour
 			if(CanShoot()){
 				Debug.Log("canshoot " + gunData.currentAmmo);
 				if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, gunData.maxDistance) && hitInfo.transform.name != "ground"){
-					//Debug.Log(hitInfo.transform.name);
 					Debug.Log("Hit!");
 					IDamagable damageable = hitInfo.transform.GetComponent<IDamagable>();
 					Debug.Log("SA: " + damageable);
