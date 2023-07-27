@@ -63,8 +63,8 @@ public class AI : MonoBehaviour
     }
 
     private void SearchWalkPoint(){
-        float randomZ = Random.Range(-walkPointRange, walkPointRange);
-        float randomX = Random.Range(-walkPointRange, walkPointRange);
+        float randomZ = UnityEngine.Random.Range(-walkPointRange, walkPointRange);
+        float randomX = UnityEngine.Random.Range(-walkPointRange, walkPointRange);
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
@@ -74,13 +74,13 @@ public class AI : MonoBehaviour
     }
 
     private void Chasing(){
-        agent.SetDestination(Target.position);
+        agent.SetDestination(Target.transform.position);
     }
 
     private void Attacking(){
         agent.SetDestination(transform.position);
 
-        transform.LookAt(Target);
+        transform.LookAt(Target.transform);
 
         PlayerShoot.shootInput?.Invoke();
     }
