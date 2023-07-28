@@ -156,7 +156,7 @@ public class AI : MonoBehaviour
             if(gunData.currentAmmo < 2){
                 if(gunData.totalAmmo == 0){
                     GettingAmmo();
-                }else if(gunData.totalAmmo > 2 && Vector3.Distance(transform.position, ReloadArea.transform.position) > 50f){
+                }else if(gunData.totalAmmo > 2 && Vector3.Distance(transform.position, ReloadArea.transform.position) > 30f){
                     Reloading();
                 }else if(Vector3.Distance(transform.position, ReloadArea.transform.position) <= 50f){
                     //Do nothing
