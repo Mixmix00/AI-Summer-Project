@@ -22,7 +22,7 @@ public class reloadArea : MonoBehaviour
     void Start()
     {
         Red = GameObject.Find("dude");
-        Blue = GameObject.Find("Sphere");
+        Blue = GameObject.Find("GUN");
         lastReloadRed = DateTime.Now;
         lastReloadBlue = DateTime.Now;
         timedAmmo = DateTime.Now;
@@ -51,7 +51,8 @@ public class reloadArea : MonoBehaviour
             
         }
 
-        if(Vector3.Distance(Blue.transform.position, transform.position) < 50f && (DateTime.Now - lastReloadBlue).TotalSeconds > 0.5f)
+        Debug.Log("e: " + Vector3.Distance(Blue.transform.position, transform.position));
+        if(Vector3.Distance(Blue.transform.position, transform.position) < 65f && (DateTime.Now - lastReloadBlue).TotalSeconds > 0.5f)
         {
             if(ammoRemaining > 0){
                 gunDataBlue.totalAmmo++;

@@ -7,23 +7,30 @@ public class Gun : MonoBehaviour
 	[SerializeField] GunData gunData;
 	private float timeSinceLastShot;
 	private void Start(){
-		PlayerShoot.shootInput+= Shoot;
+		PlayerShoot.shootInput += Shoot;
 		PlayerShoot.reloadInput += StartReload;
+		AI.shoot += Shoot;
+		AI.reload += StartReload;
+		BlueAI.shoot += Shoot;
+		BlueAI.reload += StartReload;
 		timeSinceLastShot = 10000f;
+		gunData.reloading = false;
 	}
 	private bool CanShoot(){
-		return true;
+		//return true;
 		//Debug.Log("relod: " + gunData.reloading + " tslf: " + (timeSinceLastShot > 1f / (gunData.fireRate /60f)));
 		
-		//return !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate /60f); 
+		return !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate /60f); 
 	} 
 	public void StartReload(){
+		Debug.Log("Here");
 		if(!gunData.reloading){
 			StartCoroutine(Reload());
 		}
 	}
 
 	private IEnumerator Reload(){
+		Debug.Log("Reload is being called");
 		gunData.reloading = true;
 
 		yield return new WaitForSeconds(gunData.reloadTime);

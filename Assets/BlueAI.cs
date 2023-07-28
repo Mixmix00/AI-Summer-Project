@@ -10,10 +10,14 @@ public class BlueAI : MonoBehaviour
     
     [SerializeField] GunData gunData;
 
+    DateTime lastReload;
     
     GameObject dude;
     GameObject Sphere;
     GameObject ReloadArea;
+
+    public static Action reload;
+    public static Action shoot;
 
     public LayerMask whatIsGround, whatIsPlayer;
 
@@ -44,7 +48,12 @@ public class BlueAI : MonoBehaviour
     }
 
     private void Reloading(){
-        PlayerShoot.reloadInput?.Invoke();
+        TimeSpan interval = DateTime.Now - lastReload;
+
+        if(interval.TotalSeconds > 1.5f){
+            reload?.Invoke();
+            lastReload = DateTime.Now;
+        }
     }
 
     private void GettingAmmo(){
@@ -80,7 +89,7 @@ public class BlueAI : MonoBehaviour
     }
 
     private void Chasing(){
-        transform.position = Vector3.MoveTowards(transform.position, dude.transform.position, 2f);
+        transform.position = Vector3.MoveTowards(transform.position, dude.transform.position, 0.35f);
     }
 
     private void Attacking(){
@@ -88,7 +97,7 @@ public class BlueAI : MonoBehaviour
 
         transform.LookAt(dude.transform);
 
-        PlayerShoot.shootInput?.Invoke();
+        shoot?.Invoke();
 
         Debug.Log("Blue is attacking");
         Debug.DrawRay(transform.position, transform.forward, Color.red, gunData.maxDistance);
@@ -106,17 +115,17 @@ public class BlueAI : MonoBehaviour
         Sphere = GameObject.Find("Sphere");
         ReloadArea = GameObject.Find("AmmoArea");
 
-        
+        lastReload = DateTime.Now;
         walkPointRange = 25f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        bool goingToReloadPlace = false;
         if(twoAreAlive()){
             Debug.DrawRay(transform.position, dude.transform.position - transform.position, Color.blue, 1000f);
             if(Physics.Raycast(transform.position, dude.transform.position - transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreSelf")))){
+                Debug.Log("BLUEAI: " + hitInfo.transform.name + " Distance: " + hitInfo.distance + "Attack Range: " + attackRange + "SightRange: " + sightRange);
                 if(hitInfo.transform.name == "dude"){
                     if(hitInfo.distance <= attackRange){
                         playerInAttackRange = true;
@@ -138,20 +147,19 @@ public class BlueAI : MonoBehaviour
             }
             
 
-            if(gunData.currentAmmo < 8){
-                if(gunData.totalAmmo > 31){
-                    Reloading();
-                }else if(gunData.totalAmmo > 0){
-                    Reloading();
-                }else if(gunData.totalAmmo == 0){
+            if(gunData.currentAmmo < 2){
+              if(gunData.totalAmmo == 0){
                     GettingAmmo();
-                    goingToReloadPlace = true;
+                }else if(gunData.totalAmmo > 2 && Vector3.Distance(transform.position, ReloadArea.transform.position) > 50f){
+                    Reloading();
+                }else if(Vector3.Distance(transform.position, ReloadArea.transform.position) <= 50f){
+                    //Do nothing
                 }
             }
 
-            if(!playerInSightRange && !playerInAttackRange && !goingToReloadPlace) Patrolling();
-            if(playerInSightRange && !playerInAttackRange && !goingToReloadPlace) Chasing();
-            if(playerInSightRange && playerInAttackRange && !goingToReloadPlace) Attacking();
+            if(!playerInSightRange && !playerInAttackRange && gunData.currentAmmo != 0) Patrolling();
+            if(playerInSightRange && !playerInAttackRange && gunData.currentAmmo != 0) Chasing();
+            if(playerInSightRange && playerInAttackRange && gunData.currentAmmo != 0) Attacking();
         }
     }
 }

@@ -15,6 +15,11 @@ public class AI : MonoBehaviour
     GameObject Sphere;
     GameObject ReloadArea;
 
+    DateTime lastReload;
+
+    public static Action reload;
+    public static Action shoot;
+
     public LayerMask whatIsGround, whatIsPlayer;
 
     public Vector3 walkPoint;
@@ -44,13 +49,23 @@ public class AI : MonoBehaviour
     }
 
     private void Reloading(){
-        PlayerShoot.reloadInput?.Invoke();
+        TimeSpan interval = DateTime.Now - lastReload;
+
+        if(interval.TotalSeconds > 1.5f){
+            reload?.Invoke();
+            lastReload = DateTime.Now;
+        }
+        
     }
 
     private void GettingAmmo(){
         transform.LookAt(ReloadArea.transform);
         
         transform.position = Vector3.MoveTowards(transform.position, ReloadArea.transform.position, 0.25f);
+
+        if(gunData.totalAmmo > 0){
+            Reloading();
+        }
     }
 
     private void Patrolling(){
@@ -80,7 +95,7 @@ public class AI : MonoBehaviour
     }
 
     private void Chasing(){
-        transform.position = Vector3.MoveTowards(transform.position, Sphere.transform.position, 2f);
+        transform.position = Vector3.MoveTowards(transform.position, Sphere.transform.position, 0.35f);
     }
 
     private void Attacking(){
@@ -88,7 +103,7 @@ public class AI : MonoBehaviour
 
         transform.LookAt(Sphere.transform);
 
-        PlayerShoot.shootInput?.Invoke();
+        shoot?.Invoke();
         Debug.DrawRay(transform.position, transform.forward, Color.red, gunData.maxDistance);
 
         if(gunData.currentAmmo == 0){
@@ -112,7 +127,7 @@ public class AI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool goingToReloadPlace = false;
+        
         if(twoAreAlive()){
             Debug.DrawRay(transform.position, Sphere.transform.position - dude.transform.position, Color.blue, 1000f);
             if(Physics.Raycast(transform.position, Sphere.transform.position - dude.transform.position, out RaycastHit hitInfo, sightRange, ~(1 << LayerMask.NameToLayer("IgnoreEyesRaycast")))){
@@ -139,17 +154,18 @@ public class AI : MonoBehaviour
             
 
             if(gunData.currentAmmo < 2){
-                if(gunData.totalAmmo > 0){
-                    Reloading();
-                }else if(gunData.totalAmmo == 0){
+                if(gunData.totalAmmo == 0){
                     GettingAmmo();
-                    goingToReloadPlace = true;
+                }else if(gunData.totalAmmo > 2 && Vector3.Distance(transform.position, ReloadArea.transform.position) > 50f){
+                    Reloading();
+                }else if(Vector3.Distance(transform.position, ReloadArea.transform.position) <= 50f){
+                    //Do nothing
                 }
             }
 
-            if(!playerInSightRange && !playerInAttackRange && !goingToReloadPlace) Patrolling();
-            if(playerInSightRange && !playerInAttackRange && !goingToReloadPlace) Chasing();
-            if(playerInSightRange && playerInAttackRange && !goingToReloadPlace) Attacking();
+            if(!playerInSightRange && !playerInAttackRange && gunData.currentAmmo != 0) Patrolling();
+            if(playerInSightRange && !playerInAttackRange && gunData.currentAmmo != 0) Chasing();
+            if(playerInSightRange && playerInAttackRange && gunData.currentAmmo != 0) Attacking();
         }
     }
 }
