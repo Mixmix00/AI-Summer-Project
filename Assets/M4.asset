@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: M4
   damage: 22
-  closeDamage: 65
+  closeDamage: 150
   midDamage: 35
   farDamage: 20
   headshotMultiplier: 5
   maxDistance: 200
-  totalAmmo: 30
-  currentAmmo: 0
+  totalAmmo: 0
+  currentAmmo: 4
   magSize: 31
   fireRate: 600
   reloadTime: 1.5

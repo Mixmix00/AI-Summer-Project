@@ -63,9 +63,6 @@ public class AI : MonoBehaviour
         
         transform.position = Vector3.MoveTowards(transform.position, ReloadArea.transform.position, 0.25f);
 
-        if(gunData.totalAmmo > 0){
-            Reloading();
-        }
     }
 
     private void Patrolling(){
@@ -106,9 +103,6 @@ public class AI : MonoBehaviour
         shoot?.Invoke();
         Debug.DrawRay(transform.position, transform.forward, Color.red, gunData.maxDistance);
 
-        if(gunData.currentAmmo == 0){
-            Reloading();
-        }
     }
 
     // Start is called before the first frame update
@@ -153,13 +147,13 @@ public class AI : MonoBehaviour
             }
             
 
-            if(gunData.currentAmmo < 2){
+            if(gunData.currentAmmo == 0){
                 if(gunData.totalAmmo == 0){
                     GettingAmmo();
-                }else if(gunData.totalAmmo > 2 && Vector3.Distance(transform.position, ReloadArea.transform.position) > 30f){
+                }else if(gunData.totalAmmo > 0 && Vector3.Distance(transform.position, ReloadArea.transform.position) > 50f){
                     Reloading();
-                }else if(Vector3.Distance(transform.position, ReloadArea.transform.position) <= 50f){
-                    //Do nothing
+                }else if(Vector3.Distance(transform.position, ReloadArea.transform.position) <= 50f && gunData.totalAmmo > 10){
+                    Patrolling();
                 }
             }
 
